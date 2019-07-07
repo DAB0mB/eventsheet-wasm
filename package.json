@@ -1,0 +1,23 @@
+{
+  "name": "eventsheet",
+  "version": "0.1.0",
+  "private": true,
+  "main": "bundle/eventsheet.js",
+  "scripts": {
+    "build": "webpack --config webpack_config.js",
+    "build-demo": "TARGET=demo webpack --config webpack_config.js",
+    "prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.0",
+    "babel-loader": "^8.0.5",
+    "eslint": "^5.16.0",
+    "eslint-loader": "^2.1.2",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
