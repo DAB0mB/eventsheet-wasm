@@ -29,9 +29,14 @@ module.exports = {
       },
       {
         test: /\.json$/,
-        loader: 'json-loader'
-      }
+        loader: 'json-loader',
+      },
     ]
+  },
+  resolve: {
+    alias: {
+      '~/cargos/wasm-css': path.resolve(__dirname, 'cargos/wasm-css/pkg/wasm_css.js'),
+    },
   },
   externals: [nodeExternals()],
 }

@@ -5,6 +5,7 @@ const sheetParser = require('./sheet_parser')
 const __ = require('./utils/_')
 const { addEventListener, removeAllEventListeners } = require('./utils/events')
 const { normalizeMutations, synthesizeMutations } = require('./utils/mutations')
+import('~/cargos/wasm-css');
 
 const _ = new __('index')
 
