@@ -2,8 +2,8 @@ const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 
-const [entryFile, outputFile] = process.env.TARGET === 'example' ?
-  ['example.js', 'eventsheet-example.js'] :
+const [entryFile, outputFile] = process.env.TARGET === 'demo' ?
+  ['demo.js', 'eventsheet-demo.js'] :
   ['src', 'eventsheet.js']
 
 module.exports = {

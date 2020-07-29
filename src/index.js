@@ -1,11 +1,10 @@
 const Event = require('./sheet_components/event')
 const Rule = require('./sheet_components/rule')
 const Selector = require('./sheet_components/selector')
-const sheetParser = require('./sheet_parser')
 const __ = require('./utils/_')
 const { addEventListener, removeAllEventListeners } = require('./utils/events')
 const { normalizeMutations, synthesizeMutations } = require('./utils/mutations')
-import('~/cargos/wasm-css');
+const wasm = require('./wasm');
 
 const _ = new __('index')
 
@@ -20,6 +19,10 @@ class EventSheet {
 
   static get Selector() {
     return Selector
+  }
+
+  static get wasm() {
+    return wasm._init;
   }
 
   constructor() {
@@ -43,7 +46,7 @@ class EventSheet {
   }
 
   attach(sheetString) {
-    const sheetAst = sheetParser.parse(sheetString)
+    const sheetAst = wasm.css.parse(sheetString)
 
     this.sheet = {}
 
