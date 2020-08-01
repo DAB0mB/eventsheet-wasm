@@ -5,8 +5,10 @@ pub fn parse_series<T: Parsable>(code: &String, start: usize) -> Vec<T> {
   let mut child = T::new(code, start, code.len() - start);
 
   while child.parse() {
-    let child_start = child.node().start();
+    let child_start = child.node().start() + child.node().length();
     items.push(child);
+    web_sys::console::log_1(&format!("code {}", code).into());
+
 
     {
       child = T::new(code, child_start, code.len() - child_start);

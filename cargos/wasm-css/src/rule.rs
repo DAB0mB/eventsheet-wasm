@@ -54,7 +54,7 @@ impl Parsable for Rule {
       }
 
       let mat = re_found.unwrap();
-      length = mat.end() - mat.start();
+      length = mat.start();
     }
 
     node.set_length(length);
@@ -68,9 +68,9 @@ impl Parsable for Rule {
     let key: &str;
     let value: &str;
     {
-      let split: Vec<&str> = node.code().split(' ').collect();
-      key = split[0];
-      value = split[1];
+      let split: Vec<&str> = node.code().split(':').collect();
+      key = split[0].trim();
+      value = split[1].trim();
     }
 
     self.key.push_str(key);

@@ -19,7 +19,7 @@ pub fn parse(css: &str) -> wasm_bindgen::JsValue {
 
     To use `console.log`():
 
-        web_sys::console::log_1(&format!("{}", self.blocks.len()).into());
+        web_sys::console::log_1(&format!("message {}", value).into());
 
     To emit errors using `console.error()`:
 

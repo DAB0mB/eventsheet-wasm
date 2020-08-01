@@ -1,4 +1,5 @@
 pub struct Node {
+  src_code: String,
   code: String,
   start: usize,
   length: usize,
@@ -7,6 +8,7 @@ pub struct Node {
 impl Node {
   pub fn new(code: &String, start: usize, length: usize) -> Self {
     Self {
+      src_code: code.to_string(),
       code: code[start..start + length].to_string(),
       start: start,
       length: length,
@@ -21,21 +23,37 @@ impl Node {
     self.length
   }
 
+  pub fn src_code(&self) -> &String {
+    &self.src_code
+  }
+
   pub fn code(&self) -> &String {
     &self.code
   }
 
   pub fn set_start(&mut self, start: usize) -> usize {
+    let offset = self.start as i64 - start as i64;
     self.start = start;
-    self.length = self.length - start;
-    self.code = self.code[start..start + self.length].to_string();
+
+    {
+      let length = self.length as i64 + offset;
+
+      if length > 0 {
+        self.length = length as usize;
+      }
+      else {
+        self.length = 0;
+      }
+    }
+
+    self.code = self.src_code[start..start + self.length].to_string();
 
     self.start
   }
 
   pub fn set_length(&mut self, length: usize) -> usize {
     self.length = length;
-    self.code = self.code[self.start..self.start + length].to_string();
+    self.code = self.src_code[self.start..self.start + length].to_string();
 
     self.length
   }
