@@ -27,6 +27,7 @@ impl Node {
 
   pub fn set_start(&mut self, start: usize) -> usize {
     self.start = start;
+    self.length = self.length - start;
     self.code = self.code[start..start + self.length].to_string();
 
     self.start

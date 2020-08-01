@@ -2,6 +2,7 @@ extern crate regex;
 
 use regex::Regex;
 use crate::node::Node;
+use crate::js_compatible::JsCompatible;
 use crate::parsable::Parsable;
 use crate::query::Query;
 use crate::rule::Rule;
@@ -35,7 +36,7 @@ impl Parsable for Block {
 
     let start: usize;
     {
-      let re = Regex::new(r"[^\\s]").unwrap();
+      let re = Regex::new(r"[^\s]").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -50,7 +51,7 @@ impl Parsable for Block {
 
     let scope_start: usize;
     {
-      let re = Regex::new(r"\\{").unwrap();
+      let re = Regex::new(r"\{").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -86,5 +87,28 @@ impl Parsable for Block {
     }
 
     true
+  }
+}
+
+impl JsCompatible for Block {
+  fn to_js(&self) -> js_sys::Object {
+    let js_block = js_sys::Object::new();
+    js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Block"));
+    js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));
+    js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("length"), &wasm_bindgen::JsValue::from_f64(self.node.length() as f64));
+
+    let js_rules = js_sys::Array::new();
+    js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("rules"), &js_rules);
+    for rule in self.rules.iter() {
+      js_rules.push(&rule.to_js());
+    }
+
+    let js_queries = js_sys::Array::new();
+    js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("queries"), &js_queries);
+    for query in self.queries.iter() {
+      js_queries.push(&query.to_js());
+    }
+
+    js_block
   }
 }

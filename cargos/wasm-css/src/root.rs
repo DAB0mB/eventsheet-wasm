@@ -1,10 +1,9 @@
 use crate::block::Block;
 use crate::node::Node;
 use crate::parsable::Parsable;
+use crate::js_compatible::JsCompatible;
 use crate::utils::parse_series;
-use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
 pub struct Root {
   node: Node,
   blocks: Vec<Block>,
@@ -34,5 +33,22 @@ impl Parsable for Root {
     self.blocks.append(&mut blocks);
 
     true
+  }
+}
+
+impl JsCompatible for Root {
+  fn to_js(&self) -> js_sys::Object {
+    let js_root = js_sys::Object::new();
+    js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Root"));
+    js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));
+    js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("length"), &wasm_bindgen::JsValue::from_f64(self.node.length() as f64));
+
+    let js_blocks = js_sys::Array::new();
+    js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("blocks"), &js_blocks);
+    for block in self.blocks.iter() {
+      js_blocks.push(&block.to_js());
+    }
+
+    js_root
   }
 }

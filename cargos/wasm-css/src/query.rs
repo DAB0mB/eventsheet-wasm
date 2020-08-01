@@ -2,6 +2,7 @@ extern crate regex;
 
 use regex::Regex;
 use crate::node::Node;
+use crate::js_compatible::JsCompatible;
 use crate::parsable::Parsable;
 
 pub struct Query {
@@ -29,7 +30,7 @@ impl Parsable for Query {
 
     let start: usize;
     {
-      let re = Regex::new(r"[^\\s,]").unwrap();
+      let re = Regex::new(r"[^\s,]").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -44,7 +45,7 @@ impl Parsable for Query {
 
     let length: usize;
     {
-      let re = Regex::new(r"[{,]").unwrap();
+      let re = Regex::new(r"[\{,]").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -69,5 +70,22 @@ impl Parsable for Query {
     }
 
     true
+  }
+}
+
+impl JsCompatible for Query {
+  fn to_js(&self) -> js_sys::Object {
+    let js_query = js_sys::Object::new();
+    js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Query"));
+    js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));
+    js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("length"), &wasm_bindgen::JsValue::from_f64(self.node.length() as f64));
+
+    let js_selectors = js_sys::Array::new();
+    js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("selectors"), &js_selectors);
+    for selector in self.selectors.iter() {
+      js_selectors.push(&selector.into());
+    }
+
+    js_query
   }
 }
