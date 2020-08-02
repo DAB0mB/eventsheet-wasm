@@ -23,10 +23,6 @@ impl Node {
     self.length
   }
 
-  pub fn src_code(&self) -> &String {
-    &self.src_code
-  }
-
   pub fn code(&self) -> &String {
     &self.code
   }
