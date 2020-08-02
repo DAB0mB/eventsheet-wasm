@@ -2,7 +2,7 @@ extern crate regex;
 
 use regex::Regex;
 use crate::node::Node;
-use crate::js_compatible::JsCompatible;
+use crate::js_bind::JsBind;
 use crate::parsable::Parsable;
 
 pub struct Rule {
@@ -46,7 +46,7 @@ impl Parsable for Rule {
 
     let length: usize;
     {
-      let re = Regex::new(r"[\};]").unwrap();
+      let re = Regex::new(r";").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -54,7 +54,7 @@ impl Parsable for Rule {
       }
 
       let mat = re_found.unwrap();
-      length = mat.start();
+      length = mat.end();
     }
 
     node.set_length(length);
@@ -70,7 +70,7 @@ impl Parsable for Rule {
     {
       let split: Vec<&str> = node.code().split(':').collect();
       key = split[0].trim();
-      value = split[1].trim();
+      value = split[1][..split[1].len() - 1].trim();
     }
 
     self.key.push_str(key);
@@ -80,8 +80,8 @@ impl Parsable for Rule {
   }
 }
 
-impl JsCompatible for Rule {
-  fn to_js(&self) -> js_sys::Object {
+impl JsBind for Rule {
+  fn js_bind(&self) -> js_sys::Object {
     let js_rule = js_sys::Object::new();
     js_sys::Reflect::set(&js_rule, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Rule"));
     js_sys::Reflect::set(&js_rule, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));

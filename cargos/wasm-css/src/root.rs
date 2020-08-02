@@ -1,7 +1,7 @@
 use crate::block::Block;
 use crate::node::Node;
 use crate::parsable::Parsable;
-use crate::js_compatible::JsCompatible;
+use crate::js_bind::JsBind;
 use crate::utils::parse_series;
 
 pub struct Root {
@@ -36,8 +36,8 @@ impl Parsable for Root {
   }
 }
 
-impl JsCompatible for Root {
-  fn to_js(&self) -> js_sys::Object {
+impl JsBind for Root {
+  fn js_bind(&self) -> js_sys::Object {
     let js_root = js_sys::Object::new();
     js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Root"));
     js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));
@@ -46,7 +46,7 @@ impl JsCompatible for Root {
     let js_blocks = js_sys::Array::new();
     js_sys::Reflect::set(&js_root, &wasm_bindgen::JsValue::from_str("blocks"), &js_blocks);
     for block in self.blocks.iter() {
-      js_blocks.push(&block.to_js());
+      js_blocks.push(&block.js_bind());
     }
 
     js_root

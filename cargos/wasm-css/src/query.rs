@@ -2,7 +2,7 @@ extern crate regex;
 
 use regex::Regex;
 use crate::node::Node;
-use crate::js_compatible::JsCompatible;
+use crate::js_bind::JsBind;
 use crate::parsable::Parsable;
 
 pub struct Query {
@@ -73,8 +73,8 @@ impl Parsable for Query {
   }
 }
 
-impl JsCompatible for Query {
-  fn to_js(&self) -> js_sys::Object {
+impl JsBind for Query {
+  fn js_bind(&self) -> js_sys::Object {
     let js_query = js_sys::Object::new();
     js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Query"));
     js_sys::Reflect::set(&js_query, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));

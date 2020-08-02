@@ -1,5 +1,5 @@
 mod block;
-mod js_compatible;
+mod js_bind;
 mod node;
 mod parsable;
 mod query;
@@ -8,7 +8,7 @@ mod rule;
 mod utils;
 
 use crate::parsable::Parsable;
-use crate::js_compatible::JsCompatible;
+use crate::js_bind::JsBind;
 use crate::root::Root;
 use wasm_bindgen::prelude::*;
 
@@ -30,5 +30,5 @@ pub fn parse(css: &str) -> wasm_bindgen::JsValue {
   let mut root = Root::new(&css.to_string(), 0, css.len());
   root.parse();
 
-  root.to_js().into()
+  root.js_bind().into()
 }

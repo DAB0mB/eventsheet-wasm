@@ -4,8 +4,8 @@
   "private": true,
   "main": "bundle/eventsheet.js",
   "scripts": {
-    "build": "npm run build-wasm && webpack --config webpack_config.js",
-    "build-demo": "npm run build-wasm && TARGET=demo webpack --config webpack_config.js",
+    "build": "rm -rf bundle && npm run build-wasm && webpack --config webpack_config.js",
+    "build-demo": "rm -rf bundle && npm run build-wasm && TARGET=demo webpack --config webpack_config.js",
     "build-wasm": "cd $INIT_CWD/cargos/wasm-css && wasm-pack build --target bundler",
     "prepublish": "npm run build"
   },

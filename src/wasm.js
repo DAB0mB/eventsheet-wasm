@@ -1,7 +1,7 @@
 let css
 
 const getter = (get) => () => {
-  const value = get();
+  const value = get()
 
   if (!value) {
     throw Error('Did you forget to await EventSheet.wasm?')

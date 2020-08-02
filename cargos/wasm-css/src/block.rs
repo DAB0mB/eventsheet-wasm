@@ -2,7 +2,7 @@ extern crate regex;
 
 use regex::Regex;
 use crate::node::Node;
-use crate::js_compatible::JsCompatible;
+use crate::js_bind::JsBind;
 use crate::parsable::Parsable;
 use crate::query::Query;
 use crate::rule::Rule;
@@ -59,7 +59,7 @@ impl Parsable for Block {
       }
 
       let mat = re_found.unwrap();
-      scope_start = mat.start();
+      scope_start = mat.end();
     }
 
     let length: usize;
@@ -78,8 +78,8 @@ impl Parsable for Block {
     node.set_length(length);
 
     {
-      queries.append(&mut parse_series::<Query>(node.src_code(), node.start()));
-      rules.append(&mut parse_series::<Rule>(node.src_code(), node.start() + scope_start + 1));
+      queries.append(&mut parse_series::<Query>(node.code(), 0));
+      rules.append(&mut parse_series::<Rule>(node.code(), scope_start));
     }
 
     {
@@ -92,8 +92,8 @@ impl Parsable for Block {
   }
 }
 
-impl JsCompatible for Block {
-  fn to_js(&self) -> js_sys::Object {
+impl JsBind for Block {
+  fn js_bind(&self) -> js_sys::Object {
     let js_block = js_sys::Object::new();
     js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("type"), &wasm_bindgen::JsValue::from_str("Block"));
     js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("start"), &wasm_bindgen::JsValue::from_f64(self.node.start() as f64));
@@ -102,13 +102,13 @@ impl JsCompatible for Block {
     let js_rules = js_sys::Array::new();
     js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("rules"), &js_rules);
     for rule in self.rules.iter() {
-      js_rules.push(&rule.to_js());
+      js_rules.push(&rule.js_bind());
     }
 
     let js_queries = js_sys::Array::new();
     js_sys::Reflect::set(&js_block, &wasm_bindgen::JsValue::from_str("queries"), &js_queries);
     for query in self.queries.iter() {
-      js_queries.push(&query.to_js());
+      js_queries.push(&query.js_bind());
     }
 
     js_block
