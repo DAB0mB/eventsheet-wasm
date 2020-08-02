@@ -15,11 +15,17 @@ class Block extends Node {
 
     if (!match) return false
 
-    const scopeStart = match.index
+    const scopeStart = match.index + 1
+
+    match = this.code.match(/\}/)
+
+    if (!match) return false
+
+    this.length = match.index + 1
 
     const queries = new Query.Series(this.root, this.start)
-    const rules = new Rule.Series(this.root, this.start + scopeStart + 1)
-    this.length = rules.end - this.start
+    const rules = new Rule.Series(this.root, this.start + scopeStart)
+
     this.queries = queries.items
     this.rules = rules.items
 

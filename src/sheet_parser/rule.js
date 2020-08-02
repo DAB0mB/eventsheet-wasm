@@ -13,13 +13,18 @@ class Rule extends Node {
 
     if (!match) return false
 
-    this.length = match.index
+    this.length = match.index + 1
 
     if (!this.code.trim()) return false
 
     const [key, value] = this.code.split(':').map(s => s.trim())
+
+    if (value == null) {
+      return false
+    }
+
     this.key = key
-    this.value = value
+    this.value = value.slice(0, -1)
 
     return true
   }

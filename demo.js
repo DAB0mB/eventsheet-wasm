@@ -67,6 +67,11 @@ eventsheet.attach(`
   .test {
     boom: red yellow white;
   }
+
+  .test2 {
+    boom2: example value;
+    boom3: example value2;
+  }
 `)
 
 eventsheet.observe(document)

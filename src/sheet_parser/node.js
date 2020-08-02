@@ -53,7 +53,7 @@ class Node {
     return this._found ? this : null
   }
 
-  constructor(root, start = 0, length = Infinity, ...parseArgs) {
+  constructor(root, start = 0, length = root.code.length - start, ...parseArgs) {
     if (!(root instanceof require('./root'))) {
       throw TypeError('root arg must be of Root instance')
     }

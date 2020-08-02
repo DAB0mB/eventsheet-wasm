@@ -9,7 +9,7 @@ class Query extends Node {
 
     this.start += match.index
 
-    match = this.code.match(/[{,]/)
+    match = this.code.match(/\s*[{,]/)
 
     if (!match) return false
 
@@ -17,7 +17,7 @@ class Query extends Node {
 
     if (!this.code.trim()) return false
 
-    this.selectors = this.code.split(/ +/)
+    this.selectors = this.code.split(/ +/).filter(Boolean)
 
     return true
   }
