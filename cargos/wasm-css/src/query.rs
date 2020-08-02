@@ -45,7 +45,7 @@ impl Parsable for Query {
 
     let length: usize;
     {
-      let re = Regex::new(r"[\{,]").unwrap();
+      let re = Regex::new(r"\s*[\{,]").unwrap();
       let re_found = re.find(node.code());
 
       if !re_found.is_some() {
@@ -53,7 +53,7 @@ impl Parsable for Query {
       }
 
       let mat = re_found.unwrap();
-      length = mat.end() - mat.start();
+      length = mat.start();
     }
 
     node.set_length(length);
@@ -66,7 +66,7 @@ impl Parsable for Query {
 
     {
       let re = Regex::new(r" +").unwrap();
-      selectors.append(&mut re.split(node.code()).map(|x| x.to_string()).collect());
+      selectors.append(&mut re.split(node.code()).map(|x| x.to_string()).filter(|x| x != "").collect());
     }
 
     true

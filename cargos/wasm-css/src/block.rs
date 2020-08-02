@@ -64,21 +64,23 @@ impl Parsable for Block {
 
     let length: usize;
     {
-      queries.append(&mut parse_series::<Query>(node.code(), node.start()));
-      rules.append(&mut parse_series::<Rule>(node.code(), node.start() + scope_start + 1));
+      let re = Regex::new(r"\}").unwrap();
+      let re_found = re.find(node.code());
 
-      let last_rule = &rules.last();
+      if !re_found.is_some() {
+        return false;
+      }
 
-      if last_rule.is_some() {
-        let last_rule_node = last_rule.unwrap().node();
-        length = last_rule_node.start() + last_rule_node.length() - node.start();
-      }
-      else {
-        length = 0
-      }
+      let mat = re_found.unwrap();
+      length = mat.end();
     }
 
     node.set_length(length);
+
+    {
+      queries.append(&mut parse_series::<Query>(node.src_code(), node.start()));
+      rules.append(&mut parse_series::<Rule>(node.src_code(), node.start() + scope_start + 1));
+    }
 
     {
       if node.code().trim() == "" {
